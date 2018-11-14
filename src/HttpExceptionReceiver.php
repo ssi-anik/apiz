@@ -17,7 +17,6 @@ class HttpExceptionReceiver
         $this->throwExceptions();
     }
 
-
     protected function throwExceptions()
     {
         if (array_key_exists($this->statusCode, $this->exceptions)) {

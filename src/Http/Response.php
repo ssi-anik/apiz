@@ -14,14 +14,12 @@ class Response
      */
     protected $response;
 
-
     /**
      * Store request details
      *
      * @var object
      */
     protected $request;
-
 
     /**
      * Store raw contents
@@ -73,7 +71,6 @@ class Response
 
         return null;
     }
-
 
     /**
      * Automatically parse response contents based on mime type

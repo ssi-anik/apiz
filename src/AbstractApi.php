@@ -19,7 +19,6 @@ abstract class AbstractApi
      */
     protected $httpExceptions = [];
 
-
     /**
      * skip exception when its value true
      *
@@ -48,14 +47,12 @@ abstract class AbstractApi
      */
     protected $prefix = '';
 
-
     /**
      * this variable contains request details
      *
      * @var array
      */
     protected $request = [];
-
 
     /**
      * Default headers options for request
@@ -70,7 +67,6 @@ abstract class AbstractApi
      * @var array
      */
     protected $defaultQueries = [];
-
 
     /**
      * when need to skip default header make it true
@@ -126,14 +122,12 @@ abstract class AbstractApi
         $this->client = new Request($this->baseUrl, $this->options);
     }
 
-
     /**
      * set base URL for guzzle client
      *
      * @return string
      */
     abstract protected function setBaseUrl();
-
 
     /**
      * set url prefix from code
@@ -165,7 +159,6 @@ abstract class AbstractApi
         return [];
     }
 
-
     /**
      * @param $func
      * @param $params
@@ -181,7 +174,6 @@ abstract class AbstractApi
             return $content;
         }
     }
-
 
     /**
      * set form parameters or form data for POST, PUT and PATCH request
@@ -233,7 +225,6 @@ abstract class AbstractApi
         return $this;
     }
 
-
     /**
      * set query parameters
      *
@@ -284,7 +275,6 @@ abstract class AbstractApi
         return $this;
     }
 
-
     /**
      * Set request body
      *
@@ -303,7 +293,6 @@ abstract class AbstractApi
         $this->parameters['body']   = $contents;
         return $this;
     }
-
 
     /**
      * Set request param as JSON
@@ -403,7 +392,6 @@ abstract class AbstractApi
         return $this;
     }
 
-
     /**
      * skip default http exception from request
      *
@@ -439,7 +427,6 @@ abstract class AbstractApi
 
         return $this;
     }
-
 
     /**
      * Make all request from here
@@ -496,7 +483,6 @@ abstract class AbstractApi
         return $resp;
     }
 
-
     /**
      * Get base URL
      *
@@ -536,7 +522,6 @@ abstract class AbstractApi
             }
         }
     }
-
 
     protected function mergeDefaultHeaders()
     {
