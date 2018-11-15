@@ -1,5 +1,5 @@
 {
-    "name": "nahid/apiz",
+    "name": "anik/apiz",
     "description": "Apiz is a boilerplate for REST API manager",
     "type": "php",
     "require": {
