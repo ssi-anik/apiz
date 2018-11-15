@@ -9,7 +9,7 @@ APIZ is a PHP API Client Development Kit. You can easily handle all kind of JSON
 ## Installations
 
 ```shell
-composer require nahid/apiz
+composer require anik/apiz
 ```
 
 ## Configurations
