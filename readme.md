@@ -136,3 +136,5 @@ public function createUser(array $data)
 ## Extra Methods
 
 - `getGuzzleClient()`
+## Log request data
+Override method `logRequest` which receives the array of data that will be sent to the next request. Log will have the sensetive data as well. So, be careful with what you're doing with that method.
