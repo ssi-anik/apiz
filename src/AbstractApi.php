@@ -469,6 +469,8 @@ abstract class AbstractApi
             'parameters' => $this->parameters
         ];
 
+        $this->logRequest($this->request);
+
         $request = new Psr7Request($method, $uri);
         $request->details = $this->request;
 
@@ -567,4 +569,6 @@ abstract class AbstractApi
             }
         }
     }
+
+	protected function logRequest (array $details) {}
 }
