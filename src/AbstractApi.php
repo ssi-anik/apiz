@@ -2,13 +2,13 @@
 
 namespace Apiz;
 
+use Apiz\Http\Request;
+use Apiz\Http\Response;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request as Psr7Request;
-use Apiz\Http\Request;
-use Apiz\Http\Response;
 
 abstract class AbstractApi
 {
@@ -494,6 +494,21 @@ abstract class AbstractApi
 
 
         $resp = new Response($response, $request);
+
+        // exception is handled on the new Response().
+        // no need to create an array, if the method doesn't exist
+        if (method_exists($this, 'logResponse')) {
+            if (is_string($response)) {
+                $responseDetails['error'] = true;
+            } else {
+                $responseDetails['status_code'] = $response->getStatusCode();
+                // stream is already read by the resp, get from there.
+                // https://github.com/8p/EightPointsGuzzleBundle/issues/48
+                $responseDetails['content'] = $resp->getContents();
+            }
+            $this->logResponse($responseDetails);
+        }
+
         $this->resetObjects();
         return $resp;
     }
