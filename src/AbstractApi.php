@@ -461,16 +461,25 @@ abstract class AbstractApi
         $request = new Psr7Request($method, $uri);
         $request->details = $this->request;
 
+        $exception = null;
         try {
             $response = $this->client->http->send($request, $this->parameters);
         } catch (RequestException $e) {
+            $exception = $e;
             $response = $e->getResponse();
         } catch (ClientException $e) {
+            $exception = $e;
             $response = $e->getResponse();
         } catch (BadResponseException $e) {
+            $exception = $e;
             $response = $e->getResponse();
         } catch (ServerException $e) {
+            $exception = $e;
             $response = $e->getResponse();
+        }
+
+        if (!is_null($exception) && method_exists($this, 'logException')) {
+            $this->logException($exception);
         }
 
         if (!$this->skipHttpException) {
