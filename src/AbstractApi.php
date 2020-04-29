@@ -2,6 +2,7 @@
 
 namespace Apiz;
 
+use Apiz\Exceptions\HttpExceptionReceiver;
 use Apiz\Exceptions\RequirementException;
 use Apiz\Http\Request;
 use Apiz\Http\Response;
@@ -10,10 +11,20 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request as Psr7Request;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Loguzz\Formatter\AbstractRequestFormatter;
 use Loguzz\Formatter\AbstractResponseFormatter;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @method Response get(string $uri)
+ * @method Response post(string $uri)
+ * @method Response put(string $uri)
+ * @method Response delete(string $uri)
+ * @method Response head(string $uri)
+ * @method Response options(string $uri)
+ * @method Response patch(string $uri)
+ */
 abstract class AbstractApi
 {
     /**
@@ -247,6 +258,7 @@ abstract class AbstractApi
      * @param $params
      *
      * @return Response
+     * @throws \Apiz\Exceptions\RequirementException
      */
     public function __call ($func, $params) {
         $method = strtoupper($func);
@@ -257,6 +269,8 @@ abstract class AbstractApi
 
             return $content;
         }
+
+        throw new RequirementException('Invalid method ' . $method);
     }
 
     /**
@@ -546,11 +560,10 @@ abstract class AbstractApi
         $this->mergeDefaultHeaders();
         $this->mergeDefaultQueries();
 
-
         $this->request = [
-            'url' => trim($this->baseUrl, '/') . '/' . $uri,
-            'method' => $method,
-            'parameters' => $this->parameters
+            'url'        => trim($this->baseUrl, '/') . '/' . $uri,
+            'method'     => $method,
+            'parameters' => $this->parameters,
         ];
 
         $request = new Psr7Request($method, $uri);
@@ -558,25 +571,25 @@ abstract class AbstractApi
 
         try {
             $response = $this->client->http->send($request, $this->parameters);
-        } catch (RequestException $e) {
+        } catch ( RequestException $e ) {
             $response = $e->getResponse();
-        } catch (ClientException $e) {
+        } catch ( ClientException $e ) {
             $response = $e->getResponse();
-        } catch (BadResponseException $e) {
+        } catch ( BadResponseException $e ) {
             $response = $e->getResponse();
-        } catch (ServerException $e) {
+        } catch ( ServerException $e ) {
             $response = $e->getResponse();
         }
 
         if (!$this->skipHttpException) {
-            if ($response instanceof \GuzzleHttp\Psr7\Response) {
+            if ($response instanceof GuzzleResponse) {
                 new HttpExceptionReceiver($response, $this->httpExceptions);
             }
         }
 
-
         $resp = new Response($response, $request);
         $this->resetObjects();
+
         return $resp;
     }
 
