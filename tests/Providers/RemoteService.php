@@ -12,6 +12,8 @@ class RemoteService extends AbstractApi
     static $LEVEL = 'debug';
     static $URL = '';
     static $PREFIX = '';
+    static $TAG = '';
+    static $FORCE_JSON = true;
     static $OPTIONS = [];
     static $DEFAULT_HEADERS = [];
     static $DEFAULT_QUERIES = [];
@@ -66,6 +68,14 @@ class RemoteService extends AbstractApi
 
     public function setDefaultQueries () {
         return static::$DEFAULT_QUERIES;
+    }
+
+    public function tag () : string {
+        return static::$TAG;
+    }
+
+    public function forceJson () {
+        return static::$FORCE_JSON;
     }
 
     public function __call ($func, $params) {

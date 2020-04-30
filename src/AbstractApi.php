@@ -148,6 +148,11 @@ abstract class AbstractApi
                 'length'          => $this->logRequestLength(),
             ];
 
+            if ($tag = $this->tag()) {
+                $options['tag'] = $tag;
+                $options['force_json'] = $this->forceJson();
+            }
+
             if ($requestFormatter = $this->requestFormatter()) {
                 if (!$requestFormatter instanceof AbstractRequestFormatter) {
                     throw new RequirementException('RequestFormatter should be an instanceof AbstractRequestFormatter');
@@ -251,6 +256,20 @@ abstract class AbstractApi
      */
     protected function logLevel () {
         return 'info';
+    }
+
+    /**
+     * @return string
+     */
+    protected function tag () {
+        return '';
+    }
+
+    /**
+     * @return bool
+     */
+    protected function forceJson () {
+        return false;
     }
 
     /**

@@ -34,6 +34,8 @@ class RequestFormatterTest extends TestCase
         RemoteService::$LEVEL = 'debug';
         RemoteService::$URL = '';
         RemoteService::$PREFIX = '';
+        RemoteService::$TAG = '';
+        RemoteService::$FORCE_JSON = true;
         RemoteService::$OPTIONS = [];
         RemoteService::$DEFAULT_HEADERS = [];
         RemoteService::$DEFAULT_QUERIES = [];
@@ -141,6 +143,18 @@ class RequestFormatterTest extends TestCase
 
     private function setExceptionOnly () {
         RemoteService::$EXCEPTION_ONLY = true;
+
+        return $this;
+    }
+
+    private function setTag () {
+        RemoteService::$TAG = 'custom.tag';
+
+        return $this;
+    }
+
+    private function setForceJsonFalse () {
+        RemoteService::$FORCE_JSON = false;
 
         return $this;
     }
@@ -386,5 +400,16 @@ class RequestFormatterTest extends TestCase
         $r = $this->getService()->get('/');
         $this->assertIsArray($r->parseJson(true));
         $this->assertIsObject($r->parseJson());
+    }
+
+    public function testTagContainsInLog () {
+        $this->setReqFormatter()->setTag()->getService()->get('/');
+        $this->assertStringContainsString('{"custom.tag":', $this->onLogMessage(0));
+    }
+
+    public function testTagAsArray () {
+        $this->setReqFormatter()->setForceJsonFalse()->setTag()->getService()->get('/');
+        $this->assertArrayHasKey('custom.tag', $this->onLogMessage(0));
+        $this->assertIsArray($this->onLogMessage(0));
     }
 }
