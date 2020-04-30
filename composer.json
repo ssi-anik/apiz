@@ -12,8 +12,10 @@
         "anik/loguzz": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.2",
-        "symfony/var-dumper": "^3.4"
+        "phpunit/phpunit": "^7.5.15|^8.4|^9.0",
+        "monolog/monolog": "^1.12|^2.0",
+        "symfony/var-dumper": "^3.4",
+        "mockery/mockery": "^1.3"
     },
     "license": "MIT",
     "authors": [
@@ -27,11 +29,14 @@
         }
     ],
     "autoload": {
-      "psr-4": {
-        "Apiz\\": "src/"
-      },
-      "files": [
-      ]
+        "psr-4": {
+            "Apiz\\": "src/"
+        },
+        "classmap": [
+            "tests/Providers"
+        ],
+        "files": [
+        ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
