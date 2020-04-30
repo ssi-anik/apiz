@@ -4,7 +4,7 @@ APIZ is a PHP API Client Development Kit. You can easily handle all kind of JSON
 
 ## Requirements
 
-- PHP >= 5.5.9
+- PHP >= 7.1
 
 ## Installations
 
@@ -31,8 +31,7 @@ use Apiz\AbstractApi;
 
 class ReqResApiService extends AbstractApi
 {
-    protected function setBaseUrl()
-    {
+    protected function setBaseUrl() {
         return 'https://reqres.in';
     }
 }
@@ -49,11 +48,12 @@ use Apiz\AbstractApi;
 
 class ReqResApiService extends AbstractApi
 {
-    protected $prefix = 'api';
-
-    protected function setBaseUrl()
-    {
+    protected function setBaseUrl() {
         return 'https://reqres.in';
+    }
+
+    protected function setPrefix () {
+        return 'api';
     }
 }
 ```
@@ -67,22 +67,24 @@ use Apiz\AbstractApi;
 
 class ReqResApiService extends AbstractApi
 {
-    protected $prefix = 'api';
-
     protected function setBaseUrl()
     {
         return 'https://reqres.in';
     }
 
+    protected function setPrefix () {
+        return 'api';
+    }
+
     public function allUsers()
     {
-        $users = $this->get('/users');
+        $users = $this/*->query(['page'=>2])*/->get('/users');
 
         if ($users->getStatusCode() == 200) {
-            return $users;
+            return $users->parseJson();
         }
 
-        return false;
+        return null;
     }
 }
 ```
@@ -105,10 +107,10 @@ public function createUser(array $data)
             ->post('/create');
 
     if ($user->getStatusCode() == 201) {
-        return $user;
+        return $user->parseJson();
     }
 
-    return false;
+    return null;
 }
 ```
 
@@ -119,9 +121,10 @@ public function createUser(array $data)
 - `query(array $params)`
 - `allowRedirects(array $params)`
 - `auth(string $username, string $password [, array $options])`
-- `body(string $contents)`
+- `body(array|string $contents)`
 - `json(array $params)`
 - `file(string $name, string $file_path, string $filename [, array $headers])`
+- `attach (string $name, string $contents, string $filename [, array $headers])`
 - `params(array $params)`
 
 ## List of HTTP verbs
@@ -136,5 +139,19 @@ public function createUser(array $data)
 ## Extra Methods
 
 - `getGuzzleClient()`
-## Log request data
-Override method `logRequest` which receives the array of data that will be sent to the next request. Log will have the sensetive data as well. So, be careful with what you're doing with that method.
+## Logging
+
+Apiz allows you to log your Request and Response. It requires to configure a few methods.
+
+- `logger()` return `\Psr\Log\LoggerInterface` **object**. Returning null will not log any data. 
+- `requestFormatter()` should return **object** satisfying `\Loguzz\Formatter\AbstractRequestFormatter` implementation. Returning null will not log request data. 
+- `responseFormatter()` should return **object** satisfying `\Loguzz\Formatter\AbstractResponseFormatter` implementation. Returning null will not log response data. 
+- `logRequestLength()` should return integer value. It's the length for a curl string while logging.
+- `logOnlySuccessResponse()` returning `true` will only log successful response data if guzzle didn't raise any error.
+- `logOnlyExceptionResponse()` returning `true`  will only log error responses like connection timeout, response timeout.
+- `logLevel()` can be set to any available log level.
+
+## Available Request & Response Formatters.
+
+- Request: `\Loguzz\Formatter\RequestArrayFormatter`, `\Loguzz\Formatter\RequestCurlFormatter`, `\Loguzz\Formatter\RequestJsonFormatter`.
+- Response: `\Loguzz\Formatter\ResponseArrayFormatter`, `\Loguzz\Formatter\ResponseJsonFormatter`
