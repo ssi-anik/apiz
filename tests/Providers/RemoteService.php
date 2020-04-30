@@ -14,6 +14,7 @@ class RemoteService extends AbstractApi
     static $PREFIX = '';
     static $TAG = '';
     static $FORCE_JSON = true;
+    static $USE_SEPARATOR = false;
     static $OPTIONS = [];
     static $DEFAULT_HEADERS = [];
     static $DEFAULT_QUERIES = [];
@@ -76,6 +77,10 @@ class RemoteService extends AbstractApi
 
     public function forceJson () {
         return static::$FORCE_JSON;
+    }
+
+    public function useSeparator () {
+        return static::$USE_SEPARATOR;
     }
 
     public function __call ($func, $params) {

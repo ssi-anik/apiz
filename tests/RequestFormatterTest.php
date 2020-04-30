@@ -36,6 +36,7 @@ class RequestFormatterTest extends TestCase
         RemoteService::$PREFIX = '';
         RemoteService::$TAG = '';
         RemoteService::$FORCE_JSON = true;
+        RemoteService::$USE_SEPARATOR = false;
         RemoteService::$OPTIONS = [];
         RemoteService::$DEFAULT_HEADERS = [];
         RemoteService::$DEFAULT_QUERIES = [];
@@ -155,6 +156,12 @@ class RequestFormatterTest extends TestCase
 
     private function setForceJsonFalse () {
         RemoteService::$FORCE_JSON = false;
+
+        return $this;
+    }
+
+    private function setSeparator () {
+        RemoteService::$USE_SEPARATOR = true;
 
         return $this;
     }
@@ -402,7 +409,7 @@ class RequestFormatterTest extends TestCase
         $this->assertIsObject($r->parseJson());
     }
 
-    public function testTagContainsInLog () {
+    public function testTagContainsInStringLog () {
         $this->setReqFormatter()->setTag()->getService()->get('/');
         $this->assertStringContainsString('{"custom.tag":', $this->onLogMessage(0));
     }
@@ -411,5 +418,23 @@ class RequestFormatterTest extends TestCase
         $this->setReqFormatter()->setForceJsonFalse()->setTag()->getService()->get('/');
         $this->assertArrayHasKey('custom.tag', $this->onLogMessage(0));
         $this->assertIsArray($this->onLogMessage(0));
+    }
+
+    public function testTagWithSeparator () {
+
+        $this->setReqFormatter()->setResFormatter()->setSeparator()->setForceJsonFalse()->setTag()->getService()
+             ->get('/');
+        $this->assertArrayHasKey('custom.tag.request', $this->onLogMessage(0));
+        $this->assertArrayHasKey('custom.tag.success', $this->onLogMessage(1));
+    }
+
+    public function testTagWithSeparatorOnFailure () {
+        try {
+            $this->setUrl('http://no-website-should-exists-wo-tld')->setReqFormatter()->setResFormatter()
+                 ->setSeparator()->setForceJsonFalse()->setTag()->getService()->get('/');
+        } catch ( Exception $e ) {
+        }
+        $this->assertArrayHasKey('custom.tag.request', $this->onLogMessage(0));
+        $this->assertArrayHasKey('custom.tag.failure', $this->onLogMessage(1));
     }
 }

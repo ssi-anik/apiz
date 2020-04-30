@@ -151,6 +151,7 @@ abstract class AbstractApi
             if ($tag = $this->tag()) {
                 $options['tag'] = $tag;
                 $options['force_json'] = $this->forceJson();
+                $options['separate'] = $this->useSeparator();
             }
 
             if ($requestFormatter = $this->requestFormatter()) {
@@ -270,6 +271,13 @@ abstract class AbstractApi
      */
     protected function forceJson () {
         return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function useSeparator () {
+        return false;
     }
 
     /**
