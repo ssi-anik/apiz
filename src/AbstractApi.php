@@ -269,7 +269,7 @@ abstract class AbstractApi
      * @return bool
      */
     protected function forceJson () {
-        return false;
+        return true;
     }
 
     /**
