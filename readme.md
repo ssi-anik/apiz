@@ -152,6 +152,7 @@ Apiz allows you to log your Request and Response. It requires to configure a few
 - `logLevel()` can be set to any available log level.
 - `tag()` should return non-empty string which will set the log to `["tag" => "log-message"]` format.
 - `forceJson()` should return boolean value which will cast the message in JSON string if `true` otherwise as array when `false`. It's internally casted to boolean value.
+- `useSeparator()` should return boolean value. Used with tag like `tag.request`, `tag.success`, `tag.failure`. It's internally casted to boolean value.
 
 ## Available Request & Response Formatters.
 
