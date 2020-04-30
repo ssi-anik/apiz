@@ -9,8 +9,17 @@ use Nahid\JsonQ\Jsonq;
  * @method int getStatusCode();
  * @method string getReasonPhrase()
  * @method \GuzzleHttp\Psr7\Response withStatus($code, $reasonPhrase)
+ * @method string getProtocolVersion()
+ * @method \GuzzleHttp\Psr7\Response withProtocolVersion($version)
+ * @method array getHeaders()
+ * @method bool hasHeader($header)
+ * @method array|string getHeader($header)
+ * @method string getHeaderLine($header)
+ * @method \GuzzleHttp\Psr7\Response withHeader($header, $value)
+ * @method \GuzzleHttp\Psr7\Response withAddedHeader($header, $value)
+ * @method \GuzzleHttp\Psr7\Response withoutHeader($header)
+ * @method \Psr\Http\Message\StreamInterface getBody()
  */
-
 class Response
 {
     /**
