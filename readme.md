@@ -153,7 +153,7 @@ Apiz allows you to log your Request and Response. It requires to configure a few
 
 ## Available Request & Response Formatters.
 
-| Type | Classes |
+| Formatter | Available Classes |
 | ----------- | ----------- |
 | Request | `\Loguzz\Formatter\RequestArrayFormatter` <br> `\Loguzz\Formatter\RequestCurlFormatter` <br> `\Loguzz\Formatter\RequestJsonFormatter`|
 | Response | `\Loguzz\Formatter\ResponseArrayFormatter` <br> `\Loguzz\Formatter\ResponseJsonFormatter` |
