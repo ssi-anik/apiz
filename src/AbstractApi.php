@@ -281,26 +281,6 @@ abstract class AbstractApi
     }
 
     /**
-     * @param $func
-     * @param $params
-     *
-     * @return Response
-     * @throws \Apiz\Exceptions\RequirementException
-     */
-    public function __call ($func, $params) {
-        $method = strtoupper($func);
-        if (in_array($method, $this->requestMethods)) {
-            $parameters[] = $method;
-            $parameters[] = $params[0];
-            $content = call_user_func_array([ $this, 'makeMethodRequest' ], $parameters);
-
-            return $content;
-        }
-
-        throw new RequirementException('Invalid method ' . $method);
-    }
-
-    /**
      * set form parameters or form data for POST, PUT and PATCH request
      *
      * @param array $params
@@ -566,15 +546,14 @@ abstract class AbstractApi
     }
 
     /**
-     * Make all request from here
+     * Prepare the Request
      *
      * @param string $method
      * @param string $uri
      *
-     * @return Response
-     * @throws \Apiz\Exceptions\NoResponseException
+     * @return \Psr\Http\Message\RequestInterface
      */
-    protected function makeMethodRequest ($method, $uri) {
+    protected function prepareRequest ($method, $uri) {
         if (!is_null($this->setPrefix())) {
             $this->prefix = $this->setPrefix();
         }
@@ -594,7 +573,21 @@ abstract class AbstractApi
         ];
 
         $request = new Psr7Request($method, $uri);
-        $request->details = $this->request;
+
+        return $request;
+    }
+
+    /**
+     * Make all request from here
+     *
+     * @param string $method
+     * @param string $uri
+     *
+     * @return Response
+     * @throws \Apiz\Exceptions\NoResponseException
+     */
+    protected function makeMethodRequest ($method, $uri) {
+        $request = $this->prepareRequest($method, $uri);
 
         try {
             $response = $this->client->http->send($request, $this->parameters);
@@ -683,5 +676,25 @@ abstract class AbstractApi
                 unset($this->parameters['query']);
             }
         }
+    }
+
+    /**
+     * @param $func
+     * @param $params
+     *
+     * @return Response
+     * @throws \Apiz\Exceptions\RequirementException
+     */
+    public function __call ($func, $params) {
+        $method = strtoupper($func);
+        if (in_array($method, $this->requestMethods)) {
+            $parameters[] = $method;
+            $parameters[] = $params[0];
+            $content = call_user_func_array([ $this, 'makeMethodRequest' ], $parameters);
+
+            return $content;
+        }
+
+        throw new RequirementException('Invalid method ' . $method);
     }
 }
