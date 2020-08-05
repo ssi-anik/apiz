@@ -14,6 +14,7 @@ use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use Loguzz\Formatter\AbstractRequestFormatter;
 use Loguzz\Formatter\AbstractResponseFormatter;
+use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -578,6 +579,19 @@ abstract class AbstractApi
     }
 
     /**
+     * Get Guzzle's async request
+     * In case someone wants to use async requests
+     *
+     * @param \Psr\Http\Message\RequestInterface $request
+     * @param array                              $params
+     *
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    protected function asyncRequest (RequestInterface $request, array $params = []) {
+        return $this->client->http->sendAsync($request, array_merge($this->parameters, $params));
+    }
+
+    /**
      * Make all request from here
      *
      * @param string $method
@@ -590,7 +604,7 @@ abstract class AbstractApi
         $request = $this->prepareRequest($method, $uri);
 
         try {
-            $response = $this->client->http->send($request, $this->parameters);
+            $response = $this->asyncRequest($request)->wait();
         } catch ( RequestException $e ) {
             $response = $e->getResponse();
         } catch ( ClientException $e ) {
