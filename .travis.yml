@@ -9,6 +9,7 @@ php:
 before_script:
     - composer install --no-interaction
     - composer dump-autoload -o
+    - php -S localhost:9669 server.php
 
 script:
     - vendor/bin/phpunit --testdox
