@@ -307,7 +307,8 @@ abstract class AbstractApi
      */
     protected function headers ($params = []) {
         if (is_array($params)) {
-            $this->parameters['headers'] = $params;
+            $existingHeaders = isset($this->parameters['headers']) ? $this->parameters['headers'] : [];
+            $this->parameters['headers'] = array_merge($existingHeaders, $params);
 
             return $this;
         }
