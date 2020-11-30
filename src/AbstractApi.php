@@ -563,7 +563,7 @@ abstract class AbstractApi
         if (!empty($this->prefix)) {
             $this->prefix = trim($this->prefix, '/') . '/';
         }
-        $uri = $this->prefix . trim($uri, '/');
+        $uri = $this->prefix . ltrim($uri, '/');
 
         $this->mergeDefaultHeaders();
         $this->mergeDefaultQueries();
